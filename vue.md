@@ -87,7 +87,7 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
   
 
-![Vue_initComputed_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_initComputed_code.png)
+![Vue_initComputed_code.png](\img\Vue_initComputed_code.png)
 
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
