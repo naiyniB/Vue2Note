@@ -87,8 +87,8 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
   
 
-![Vue_initComputed_code.png](\img\Vue_initComputed_code.png)
 
+![Vue_initComputed_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_initComputed_code.png)
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
 ## 动态地绑定一个或多个属性(V-BIND)
