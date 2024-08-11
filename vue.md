@@ -13,6 +13,7 @@ Object.defineProperty 是 JavaScript 中的一个方法
 Object.defineProperty 允许**为属性定义 getter 和 setter 函数**。这些函数可以在访问或修改属性值时被调用。
 
 ##  响应式系统
+
 Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法来劫持属性的访问器（getter/setter）。以下是Vue初始化响应式属性的基本步骤:
 
     1. 递归遍历:Vue 会递归遍历 data 选项中的所有属性。
@@ -24,6 +25,7 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 在Vue 3中,响应式系统得到了重写,使用了ES6的Proxy来实现,这使得Vue3的响应式系统更加高效和强大
 
 ​    Proxy可以直接响应对象属性的访问和修改,不需要使用 Object.defineProperty来定义getter和setter
+
 ## Vue的模版语法
 
 插值
@@ -43,28 +45,30 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 计算属性
 
 先来看下计算属性
+
    ```Vue
-     new Vue({
-       el: "#app",
-       data: {
-         a: 1,
-         b: 2,
-       },
-       computed: {
-         // 使用对象字面量定义计算属性
-         computedValue: {
-           // getter 函数
-           get: function () {
-             return this.a + this.b;
-           },
-           // 可选的 setter 函数
-           set: function (newValue) {
-             this.a = newValue - this.b;
-           },
-         },
-       },
-     });
+  new Vue({
+    el: "#app",
+    data: {
+      a: 1,
+      b: 2,
+    },
+    computed: {
+      // 使用对象字面量定义计算属性
+      computedValue: {
+        // getter 函数
+        get: function () {
+          return this.a + this.b;
+        },
+        // 可选的 setter 函数
+        set: function (newValue) {
+          this.a = newValue - this.b;
+        },
+      },
+    },
+  });
    ```
+
 这个是计算属性的完整形式，常用的是他的语法糖形式
 
     new Vue({
@@ -80,7 +84,10 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
         },
       },
     }) 
-​    <img src="C:\Users\Administrator\Desktop\代码\computed_Vue2" alt="image-20240710162551288"  />
+
+  
+
+![Vue_initComputed_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_initComputed_code.png)
 
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
@@ -172,9 +179,9 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
    }
    ```
 
-   ![image-20240715234131954](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\v-bind)
+   ![v-bind.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\v-bind.png)
 
-   ![image-20240715234325768](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\v-bind-1)
+   ![v-bind-1.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\v-bind-1.png)
 
 ## 条件渲染(V-IF  & V-SHOW)
 
@@ -422,7 +429,7 @@ methods: {
 
 - checkbox 和 radio 使用 `checked` property 和 `change` 事件；
 
-  > ![image-20240713105141269](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\checkmodel)
+  > ![Vue_Getcheckmodel_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_Getcheckmodel_code.png)
   >
   > 以此为例： checkModel 中chenge事件的回调函数 中 会根据property的类型 选择不同的方式，
   >
@@ -432,7 +439,7 @@ methods: {
 
 - select 字段将 `value` 作为 prop 并将 `change` 作为事件。
 
-  >![image-20240713112743619](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\selectModel)
+  >![Vue_selectModel_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_selectModel_code.png)
 
 v-model 实际上就是 v-bind 绑定attribute 和v-on 的语法糖罢了
 
@@ -617,11 +624,11 @@ requireComponent.keys().forEach(fileName => {
 
 >  ~~`require.context`是 Webpack 特有的一个 API，它允许你通过执行一个函数来创建自己的上下文模块。这个功能非常强大，因为它可以自动地导入一个目录下的所有模块，这对于代码分割和懒加载非常有用。~~
 >
-> ~~`require.context(directory, useSubdirectories, regExp)` 接受三个参数：~~
+>  ~~`require.context(directory, useSubdirectories, regExp)` 接受三个参数：~~
 >
-> 1. ~~**directory**: 需要检索的目录的路径。~~
-> 2. ~~**useSubdirectories**: 一个布尔值，指示是否搜索子目录。~~
-> 3. ~~**regExp**: 一个正则表达式，用来匹配文件名。~~
+>  1. ~~**directory**: 需要检索的目录的路径。~~
+>  2. ~~**useSubdirectories**: 一个布尔值，指示是否搜索子目录。~~
+>  3. ~~**regExp**: 一个正则表达式，用来匹配文件名。~~
 
 ## ~~组件二（prop）~~
 
@@ -1161,13 +1168,13 @@ function (slotProps) {
         ```
 
         这样就可以检查 author是不是Person构造函数实例化的。
-        
+
         多个数据类型用数组包裹。
-        
+
       - **default** ：用来给定一个默认值，对象和数组需要函数获得，如果父组件中attribute没给 就用默认值。
-      
+
       -  **required**：是否是必须给定prop
-      
+
       -  **validator**：值是一个函数， 对prop进行一些校验 返回值为真假。
 
 6. **非 Prop 的 Attribute**
