@@ -178,10 +178,8 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
      };
    }
    ```
-
-   ![v-bind.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\v-bind.png)
-
-   ![v-bind-1.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\v-bind-1.png)
+![v-bind.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind.png)
+![v-bind-1.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind-1.png)
 
 ## 条件渲染(V-IF  & V-SHOW)
 
@@ -429,7 +427,7 @@ methods: {
 
 - checkbox 和 radio 使用 `checked` property 和 `change` 事件；
 
-  > ![Vue_Getcheckmodel_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_Getcheckmodel_code.png)
+  > ![Vue_Getcheckmodel_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_Getcheckmodel_code.png)
   >
   > 以此为例： checkModel 中chenge事件的回调函数 中 会根据property的类型 选择不同的方式，
   >
@@ -439,7 +437,7 @@ methods: {
 
 - select 字段将 `value` 作为 prop 并将 `change` 作为事件。
 
-  >![Vue_selectModel_code.png](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\img\Vue_selectModel_code.png)
+  >![Vue_selectModel_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_selectModel_code.png)
 
 v-model 实际上就是 v-bind 绑定attribute 和v-on 的语法糖罢了
 
