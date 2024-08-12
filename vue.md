@@ -24,20 +24,20 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
 在Vue 3中,响应式系统得到了重写,使用了ES6的Proxy来实现,这使得Vue3的响应式系统更加高效和强大
 
-​    Proxy可以直接响应对象属性的访问和修改,不需要使用 Object.defineProperty来定义getter和setter
+    Proxy可以直接响应对象属性的访问和修改,不需要使用 Object.defineProperty来定义getter和setter
 
 ## Vue的模版语法
 
 插值
 
-​    文本（内容）用 {{}} 插值
-
-​    属性 attribute 用v-bind 指令插值
+    文本（内容）用 {{}} 插值
+    
+    属性 attribute 用v-bind 指令插值
 
 
 
 指令
-​    指令 (Directives) 是带有 v- 前缀的特殊 attribute    
+    指令 (Directives) 是带有 v- 前缀的特殊 attribute    
 
 
 ## Vue的计算属性、方法和侦听器
@@ -86,6 +86,9 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
     }) 
 
   
+
+
+
 
 
 ![Vue_initComputed_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_initComputed_code.png)
@@ -178,8 +181,9 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
      };
    }
    ```
-![v-bind.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind.png)
-![v-bind-1.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind-1.png)
+
+   ![v-bind.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind.png)
+   ![v-bind-1.png](https://github.com/naiyniB/Vue2Note/blob/main/img/v-bind-1.png)
 
 ## 条件渲染(V-IF  & V-SHOW)
 
@@ -1171,9 +1175,9 @@ function (slotProps) {
 
       - **default** ：用来给定一个默认值，对象和数组需要函数获得，如果父组件中attribute没给 就用默认值。
 
-      -  **required**：是否是必须给定prop
+      - **required**：是否是必须给定prop
 
-      -  **validator**：值是一个函数， 对prop进行一些校验 返回值为真假。
+      - **validator**：值是一个函数， 对prop进行一些校验 返回值为真假。
 
 6. **非 Prop 的 Attribute**
 
@@ -1228,7 +1232,7 @@ new Vue({
 
 #### 在组件上使用原生事件
 
-​	<u>这一段我还不是很理解</u>
+	<u>这一段我还不是很理解</u>
 
 在组件上使用v-modle是时候，他会自动选择一个property和 event作为prop和event。
 
@@ -1236,9 +1240,103 @@ new Vue({
 
 ### 插槽
 
+##### slot
 
+组件中template的slot 标签作为组件中的html元素的出口，当不存在slot的时候，组件的内容将会被丢弃，（组件都指的在使用上的那一部分html）。
+
+##### 插槽的作用域
+
+在这个插槽中的内容是传递给组件的slot的，渲染后传进去的，所以变量也只能访问父组件的。
+
+##### 默认内容
+
+在组件的template中的slot标签内部的内容会被当成默认的内容，在组件中不存在内容时，显示默认内容，存在就用传递过来的。
+
+##### 带名字的插槽
+
+组件的template中的slot带有一个特殊的attribute，这个就是name，在template中存在多个slot时，为了准确的传过去内容，可以为slot的attribute的name赋值，默认名字为define。
+
+组件在使用的时候，需要用<template> 标签将不同的元素分类，通过在<template>标签中增加v-slot 指令，将v-slot指令上的参数作为名称。不在<template>中的都是名字默认是 define。
+
+```html
+ <template v-slot:header>
+    <h1>Here might be a page title</h1>
+ </template>
+```
+
+##### 插槽prop
+
+在上面我们看到，组件的内容是渲染完成后传递到插槽的，是没办法访问到子组件中的数据的，为了实现这个，可以在子组件的slot上增加attribute，这些attribute被称为插槽prop.
+
+在父组件中我们通过v-slot来为包含了全部的插槽prop内容设置一个名字。
+
+```htm
+<current-user>
+  <template v-slot:default="slotProps">
+    {{ slotProps.user.firstName }}
+  </template>
+</current-user>
+```
+
+在这个例子中，我们选择将包含所有插槽 prop 的对象命名为 `slotProps`。
+
+其中的内部工作原理是将你的插槽内容包裹在一个拥有单个参数的函数里
+
+```js
+function (slotProps) {
+  // 插槽内容
+}
+```
+
+先参谋这段代码，大致意思是先判断这个是不是一个v-slot指令中带名字的插槽，如果是 保证props是一个对象，并与bindObject合并，作为scopedSlotFn的参数进行传递，这个函数返回一个渲染好的节点。另一个else的也是类似的。
+
+
+
+![renderSlot.png](https://github.com/naiyniB/Vue2Note/blob/main/img/renderSlot.png)
+
+##### 关于scopedSlots属性的解释
+
+- 当 Vue 编译模板时，它会识别到使用 `slot` 和 `scope` 的模板语法。如果父组件使用了 `v-slot` 指令，编译器会将这部分模板转换为一个函数，这个函数会在运行时生成虚拟 DOM 节点。
+- 对于每个使用 `v-slot` 定义的插槽，编译器会生成一个对应的渲染函数。这个函数会接收一个参数（通常是一个包含插槽 props 的对象），然后返回插槽的内容。
+- 在组件实例的初始化过程中，Vue 会根据编译生成的渲染函数创建 `$scopedSlots` 对象。这个对象的键是插槽的名称（例如 `header`、`footer` 或默认插槽 `default`），值是对应的渲染函数。
+- 当子组件渲染时，它会调用 `$scopedSlots` 对象中相应的函数来生成插槽内容。这些函数接收子组件传递的 props 作为参数，并返回插槽的虚拟 DOM 树。
+
+**示例代码**
+
+假设我们有以下子组件和父组件的模板：
+
+**子组件**：
+
+```
+vue复制<template>
+  <ul>
+    <li v-for="item in items" :key="item.id">
+      <slot :item="item"></slot>
+    </li>
+  </ul>
+</template>
+```
+
+**父组件**：
+
+```
+vue<template>
+  <child-component>
+    <template v-slot:default="slotProps">
+      <span>{{ slotProps.item.name }}</span>
+    </template>
+  </child-component>
+</template>
+```
+
+在这个例子中，Vue 的编译器会识别父组件的 `v-slot` 指令，并生成一个渲染函数，这个函数会在运行时返回 `<span>` 元素。然后，Vue 会在子组件的实例中创建 `$scopedSlots.default` 属性，并将其设置为这个渲染函数。
+
+> 较难理解的部分就在上面的了，其他的显示利用解构之类的反而没什么了。
+
+<u>还有 **v-slot可以简写成 #**</u>
 
 ## 过度动画
 
-## 路由
 
+
+## 路由
