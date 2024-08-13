@@ -91,6 +91,7 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
 
 
+
 ![Vue_initComputed_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_initComputed_code.png)
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
@@ -1240,19 +1241,19 @@ new Vue({
 
 ### 插槽
 
-##### slot
+### slot
 
 组件中template的slot 标签作为组件中的html元素的出口，当不存在slot的时候，组件的内容将会被丢弃，（组件都指的在使用上的那一部分html）。
 
-##### 插槽的作用域
+### 插槽的作用域
 
 在这个插槽中的内容是传递给组件的slot的，渲染后传进去的，所以变量也只能访问父组件的。
 
-##### 默认内容
+### 默认内容
 
 在组件的template中的slot标签内部的内容会被当成默认的内容，在组件中不存在内容时，显示默认内容，存在就用传递过来的。
 
-##### 带名字的插槽
+### 带名字的插槽
 
 组件的template中的slot带有一个特殊的attribute，这个就是name，在template中存在多个slot时，为了准确的传过去内容，可以为slot的attribute的name赋值，默认名字为define。
 
@@ -1264,7 +1265,7 @@ new Vue({
  </template>
 ```
 
-##### 插槽prop
+### 插槽prop
 
 在上面我们看到，组件的内容是渲染完成后传递到插槽的，是没办法访问到子组件中的数据的，为了实现这个，可以在子组件的slot上增加attribute，这些attribute被称为插槽prop.
 
@@ -1294,7 +1295,7 @@ function (slotProps) {
 
 ![renderSlot.png](https://github.com/naiyniB/Vue2Note/blob/main/img/renderSlot.png)
 
-##### 关于scopedSlots属性的解释
+### 关于scopedSlots属性的解释
 
 - 当 Vue 编译模板时，它会识别到使用 `slot` 和 `scope` 的模板语法。如果父组件使用了 `v-slot` 指令，编译器会将这部分模板转换为一个函数，这个函数会在运行时生成虚拟 DOM 节点。
 - 对于每个使用 `v-slot` 定义的插槽，编译器会生成一个对应的渲染函数。这个函数会接收一个参数（通常是一个包含插槽 props 的对象），然后返回插槽的内容。
@@ -1335,8 +1336,38 @@ vue<template>
 
 <u>还有 **v-slot可以简写成 #**</u>
 
+
+
+### 动态组件
+
+Vue 的 <component> 元素加一个特殊的 is attribute
+
+```html
+<!-- 组件会在 `currentTabComponent` 改变时改变 -->
+<component v-bind:is="currentTabComponent"></component>
+```
+
+<component>元素会根据不同的is的值实例化不同的组件。
+
+> <component> 元素是一个抽象的组件，它不会直接渲染任何内容，除非 is 属性被绑定到一个有效的组件名称。此外，使用 <component> 元素时，需要确保所有可能的组件都已经被注册到Vue实例中。
+
+#### 保持组件的状态
+
+上面改变组件会销毁创建组件，如果希望组件不被销毁，保持实例，用<keep-alive>元素包起来。
+
+### 异步组件
+
+待补充
+
+## 一些边界操作
+
+### $root
+
+
+
 ## 过度动画
 
 
 
 ## 路由
+
