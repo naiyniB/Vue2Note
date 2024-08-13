@@ -1361,13 +1361,54 @@ Vue 的 <component> 元素加一个特殊的 is attribute
 
 ## 一些边界操作
 
-### $root
+### 访问组件的一些操作
 
+1. `$root`  访问根实例
 
+2. `$parent`子组件访问父组件实例
+
+3. `$refs`访问子组件实例
+
+   - 用`ref` 这个 attribute 为子组件赋予一个 ID 引用，像这样
+
+     ```html
+     <base-input ref="xxid"></base-input>
+     ```
+
+   - 然后用`this.$refs.xxid`访问这个组件实例
+
+     > 当 `ref` 和 `v-for` 一起使用的时候，得到的 ref 将会是一个包含了对应数据源的这些子组件的数组
+
+     > `$refs` 只会在组件渲染完成之后生效，并且它们**不是响应式的**
+
+4. `provide` 和 `inject`两个选项
+
+   1. `provide` 选项允许我们指定我们想要**提供**给后代组件的数据/方法
+
+   2. 使用 `inject` 选项来接收指定的我们想要添加在这个实例上的 property
+
+   3. 使用示例如下
+
+      ```js
+      provide: function () {
+        return {
+          key: value
+        }
+      }
+      ```
+
+      ```js
+      inject: ['value']
+      ```
+
+   4. 实际上，你可以把依赖注入看作一部分“大范围有效的 prop”，除了：
+
+      - 祖先组件不需要知道哪些后代组件使用它提供的 property
+      - 后代组件不需要知道被注入的 property 来自哪里
+      - property 还是非响应式的。
 
 ## 过度动画
 
 
 
 ## 路由
-
