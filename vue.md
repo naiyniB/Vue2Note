@@ -1407,6 +1407,63 @@ Vue 的 <component> 元素加一个特殊的 is attribute
       - 后代组件不需要知道被注入的 property 来自哪里
       - property 还是非响应式的。
 
+
+
+### 模版定义的替代方式
+
+- `inline-template`这个attribute，当使用一个组件的时候，增加这个attribute，这个组件内的内容会成为替代`template`的存在。
+
+  ```js
+  Vue.component("hello-world", {
+    template: "<div>#hello-world-template</div>",
+  });
+  ```
+
+  ```html
+  <div id="app">  
+      <hello-world inline-template>
+      <div>sss</div>
+      </<hello-world>
+  </div>
+  ```
+
+  其中的内容 相当于写在了template中一样。
+
+- `X-Template` 
+
+  待补充
+
+### 控制更新
+
+- 应当更新而未更新（强制更新）
+
+  `$forceUpadata` 
+
+- 希望不要更新
+
+  渲染普通的 HTML 元素在 Vue 中是非常快速的，但有的时候你可能有一个组件，这个组件包含了**大量**静态内容。在这种情况下，你可以在`template`根元素上添加 `v-once` attribute 以确保这些内容只计算一次然后缓存起来
+
+  示例：
+
+  ```js
+  Vue.component('terms-of-service', {
+    template: `
+      <div v-once>
+        <h1>Terms of Service</h1>
+        ... a lot of static content ...
+      </div>
+    `
+  })
+  ```
+
+  
+
+
+
+
+
+
+
 ## 过度动画
 
 
