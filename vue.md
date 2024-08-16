@@ -92,6 +92,10 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
 
 
+
+
+
+
 ![Vue_initComputed_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_initComputed_code.png)
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
@@ -1458,14 +1462,90 @@ Vue 的 <component> 元素加一个特殊的 is attribute
 
   
 
+## 混入 (mixin)
 
+这里的混入 意思是一个选项对象，可以被合并到使用这个混入的本身的组件内。
 
+示例：
 
+```js
+var myMixin = {
+  created: function () {
+    this.hello();
+  },
+  methods: {
+    hello: function () {
+      console.log("hello from mixin!");
+    },
+  },
+};
+let vm = new Vue({
+  el: "#demo",
+  mixins: [myMixin],
+});
+```
 
+### 混入对象的注册方式
 
+和组件注册一样分两种
 
-## 过度动画
+1. **全局注册**
 
+   混入也可以进行全局注册，<u>将影响**每一个**之后创建的 Vue 实例</u>
 
+   ```js
+   Vue.mixin({
+     created: function () {
+       var myOption = this.$options.myOption
+       if (myOption) {
+         console.log(myOption)
+       }
+     }
+   })
+   
+   new Vue({
+     myOption: 'hello!'
+   })
+   ```
 
-## 路由
+   > 它会影响每个单独创建的 Vue 实例 (包括第三方组件)
+
+2. **局部注册**
+
+```js
+var mixin = {
+    ***
+}
+var vm = new Vue({
+  mixins: [mixin],
+  }
+})
+```
+
+### 选项合并
+
+<u>上面说了混入的选项对象会合并，其中不可避免的就是同名的选项怎么处理。</u>
+
+> 合并选项我推测，在合并的时候将非重名的选项房子组件对象上面
+>
+> 重名的只保留组件的
+
+- 组件中选项值为对象的，如data motheds 等
+
+  > 将被合并为同一个对象。两个对象键名冲突时，取**组件对象**的键值对。
+
+- 组件中为钩子函数的
+
+  > 将合并为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子**之前**调用。
+
+### 自定义选项的合并方法
+
+待补充
+
+## 自定义指令
+
+前面学过了 Vue的Computed方法和mixin方法，现在要开始一个新的方法了，`Vue.directive`
+
+和前面是完全一样的，全局注册or局部注册
+
+全局注册是用Vue.directive方法中 一个名字加上一个选项对象。
