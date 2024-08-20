@@ -131,6 +131,7 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 
 
 
+
 ![Vue_initComputed_code.png](https://github.com/naiyniB/Vue2Note/blob/main/img/Vue_initComputed_code.png)
 对于这个computed Vue2中 是这个么处理的 ，和data中的类似 都是defineProperty劫持。
 
@@ -1618,6 +1619,105 @@ let vm = new Vue({
   el: "#demo",
 });
 ```
+
+## 插件
+
+插件就是一些用来增加全局功能的，比如增加一些property或者一些方法，或者增加一些指令，过滤器.....
+
+### 使用插件
+
+> 通过全局方法 `Vue.use()` 使用插件。它需要在你调用 `new Vue()` 启动应用之前完成
+
+### 定义插件
+
+Vue.js 的插件应该暴露一个 `install` 方法。这个方法的第一个参数是 `Vue` 构造器，第二个参数是一个可选的选项对象。
+
+看了实例就懂了，插件就一个函数，将一些想增加的行为封装起来。
+
+```js
+MyPlugin.install = function (Vue, options) {
+  // 1. 添加全局方法或 property
+  Vue.myGlobalMethod = function () {
+    // 逻辑...
+  }
+
+  // 2. 添加全局资源
+  Vue.directive('my-directive', {
+    bind (el, binding, vnode, oldVnode) {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 3. 注入组件选项
+  Vue.mixin({
+    created: function () {
+      // 逻辑...
+    }
+    ...
+  })
+
+  // 4. 添加实例方法
+  Vue.prototype.$myMethod = function (methodOptions) {
+    // 逻辑...
+  }
+}
+```
+
+## 过滤器
+
+> 学了component、mixin和directive，相信过滤器也没什么了
+
+1. 怎么用？
+
+   过滤器可以用在两个地方：**双花括号插值和 `v-bind` 表达式** (后者从 2.1.0+ 开始支持)。过滤器应该被添加在 JavaScript 表达式的尾部，由“管道”符号指示。
+
+   ```html
+   <!-- 在双花括号中 -->
+   {{ message | capitalize }}
+   
+   <!-- 在 `v-bind` 中 -->
+   <div v-bind:id="message | capitalize"></div>
+   ```
+
+2. 怎么定义？
+
+   - 全局注册
+
+     ```js
+     Vue.filter('capitalize', function (value) {
+       if (!value) return ''
+       value = value.toString()
+       return value.charAt(0).toUpperCase() + value.slice(1)
+     })
+     ```
+
+   - 局部注册
+
+     ```js
+     // 在一个组件的选项中定义本地的过滤器
+     filters: {
+       capitalize: function (value) {
+         if (!value) return ''
+         value = value.toString()
+         return value.charAt(0).toUpperCase() + value.slice(1)
+       }
+     }
+     ```
+
+     > 在创建 Vue 实例之前全局定义过滤器。
+     >
+     > 当全局过滤器和局部过滤器重名时，会采用局部过滤器。
+     >
+     > 过滤器函数总接收表达式的值 (之前的操作链的结果) 作为第一个参数。
+
+     过滤器是 JavaScript 函数，因此可以接收参数：
+
+     ```html
+     {{ message | filterA('arg1', arg2) }}
+     ```
+
+     这里，`filterA` 被定义为接收**三个参数**的过滤器函数。其中 `message` 的值作为第一个参数，普通字符串 `'arg1'` 作为第二个参数，表达式 `arg2` 的值作为第三个参数。
 
 ## 单文件组件
 
