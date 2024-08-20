@@ -1,4 +1,36 @@
-## Js的 Object.defineProperty 的用法
+## 前置知识
+
+### Modules
+
+
+
+### 解构
+
+- 适用于从数组或对象中提取多个值并赋给多个变量。
+
+- 适用于函数参数的默认值设置。
+
+- 不能对基本数据类型进行解构
+
+- 如果解构的变量已经存在，它将被重新赋值。
+
+- 如果变量不存在，它将被创建。
+
+  > ```js
+  > // 假设我们尝试解构赋值一个不存在的变量
+  > const { foo } = { foo: 'bar' };
+  > 
+  > // 现在 foo 是 'bar'
+  > console.log(foo); // 输出: bar
+  > 
+  > // 接下来，我们尝试解构赋值一个不存在的对象和变量
+  > const { baz } = {}; // 这里 {} 是一个空对象
+  > 
+  > // 由于 baz 不存在于空对象中，它将被创建并赋值为 undefined
+  > console.log(baz); // 输出: undefined
+  > ```
+
+### Js的 Object.defineProperty 的用法
 
 Object.defineProperty 是 JavaScript 中的一个方法
 
@@ -12,11 +44,12 @@ Object.defineProperty 是 JavaScript 中的一个方法
 
 Object.defineProperty 允许**为属性定义 getter 和 setter 函数**。这些函数可以在访问或修改属性值时被调用。
 
-##  响应式系统
+###  响应式系统
 
 Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法来劫持属性的访问器（getter/setter）。以下是Vue初始化响应式属性的基本步骤:
 
     1. 递归遍历:Vue 会递归遍历 data 选项中的所有属性。
+    
     2. 属性定义:对于每个属性,Vue 使用Object.defineProperty重新定义它,而不是使用默认的赋值方式。
     3. 依赖收集:通过在getter中收集依赖,Vue能够追踪哪些计算属性或者渲染函数依赖了这个属性。
     4. 变更通知:当属性的值发生变化时,在setter中通知所有依赖于这个属性的计算属性和组件,使得它们可以重新计算或重新渲染
@@ -30,6 +63,7 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
 插值
 
     文本（内容）用 {{}} 插值
+    
     属性 attribute 用v-bind 指令插值
 
 
@@ -84,6 +118,8 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
     }) 
 
   
+
+
 
 
 
@@ -1434,25 +1470,7 @@ Vue 的 <component> 元素加一个特殊的 is attribute
 
 - `X-Template` 
 
-  在一个 `<script>` 元素中，并为其带上 `text/x-template` 的类型，然后通过一个 id 将模板引用过去。
-
-  示例：
-
-  ```html
-  <script type="text/x-template" id="hello-world-template">
-    <p>Hello hello hello</p>
-  </script>
-  ```
-
-  > `script`需要在vue的根元素外部
-
-  ```js
-  Vue.component('hello-world', {
-    template: '#hello-world-template'
-  })
-  ```
-
-  
+  待补充
 
 ### 控制更新
 
@@ -1479,7 +1497,7 @@ Vue 的 <component> 元素加一个特殊的 is attribute
 
   
 
-## 混入 (mixin) Vue.mixin
+## 混入 (mixin)
 
 这里的混入 意思是一个选项对象，可以被合并到使用这个混入的本身的组件内。
 
@@ -1508,7 +1526,7 @@ let vm = new Vue({
 
 1. **全局注册**
 
-   混入也可以进行全局注册，<u>将影响**每一个**创建的 Vue 实例</u>
+   混入也可以进行全局注册，<u>将影响**每一个**之后创建的 Vue 实例</u>
 
    ```js
    Vue.mixin({
@@ -1559,127 +1577,65 @@ var vm = new Vue({
 
 待补充
 
-## 自定义指令Vue.directive
+## 自定义指令
 
 前面学过了 Vue的Computed方法和mixin方法，现在要开始一个新的方法了，`Vue.directive`
 
 和前面是完全一样的，全局注册or局部注册
 
-<u>**全局注册**是用Vue.directive方法中 一个名字加上一个指令定义对象；如果想要**局部注册**组件中也接受一个 `directives` 的选项。</u>
+**全局注册**是用Vue.directive方法中 一个名字加上一个选项对象。
 
-1. 组件的指令定义对象中提供了几个钩子函数
+**注册局部**指令，组件中也接受一个 `directives` 的选项。
 
-   - bind
-   - inserted
-   - update
-   - componentUpdated
-   - unbind
+示例：
 
-2. 钩子函数的参数 (即 `el`、`binding`、`vnode` 和 `oldVnode`)。
+```js
+var focus = {
+// 局部注册指令的定义
+  inserted: function (el) {
+    el.focus();
+  },
+};
+let vm = new Vue({
+  el: "#demo",
+  directives: {
+    focus,
+  },
+});
 
-   - el
-   - binding对象
-     - `name`：指令名，不包括 `v-` 前缀。
-     - `value`：指令的绑定值，例如：`v-my-directive="1 + 1"` 中，绑定值为 `2`。
-     - `oldValue`：指令绑定的前一个值，仅在 `update` 和 `componentUpdated` 钩子中可用。无论值是否改变都可用。
-     - `expression`：字符串形式的指令表达式。例如 `v-my-directive="1 + 1"` 中，表达式为 `"1 + 1"`。
-     - `arg`：传给指令的参数，可选。例如 `v-my-directive:foo` 中，参数为 `"foo"`。
-     - `modifiers`：一个包含修饰符的对象。例如：`v-my-directive.foo.bar` 中，修饰符对象为 `{ foo: true, bar: true }`。
-   - vnode
-   - oldVnode
+```
 
-   > 具体的解释 待补充
+```js
+// 注册一个全局自定义指令 `v-focus`
+Vue.directive("focus", {
+  // 当被绑定的元素插入到 DOM 中时……
+  inserted: function (id) {
+    id.focus();
+  },
+});
 
-## 渲染函数render
+let vm = new Vue({
+  el: "#demo",
+});
+```
 
-**createElement方法** 和 **render方法** 待补充
+## 单文件组件
 
-## 插件
+单文件组件官方的是一个`.vue`的文件。这个文件不能直接的使用，需要编译成js文件。
 
-- 使用插件
+也就是说 webpack利用 vue-loader 编译单文件组件编译成为一个浏览器能理解的js文件。
 
-  插件就是为了增强功能的，比如想增加点全局的方法，实例的方法（prototype)
+### webpack
 
-  通过全局方法 `Vue.use()` 使用插件,它需要在你调用 `new Vue()` 前完成
+> VueCli现在先理解成为一个预设webpack 配置。
 
-  <u>插件就是一个对象</u>
+> 先对webpack进行一个宏观的概念: 这是一个静态资源打包工具。
+>
+> 说白了就是将一些代码上的依赖文件,进行整理,然后将整理好的文件输出出来。
+>
+> webpack先从你给定的entry文件出发，作为一个程序流程上的入口，整理收集到最后，整理好的文件，按照你设计好的名字等，输出到你指定的output
 
-- 开发插件
+在哪里设计入口 出口 或者整理好的文件名字呢。**答案就是：webpack.config.js**
 
-  Vue.js 的插件应该暴露一个 `install` 方法。这个方法的第一个参数是 `Vue` 构造器，第二个参数是一个可选的选项对象。
+## vue-router
 
-  ```js
-  var MyPlugin = {};
-  
-  MyPlugin.install = function (Vue, options) {
-    if(options==null){
-      console.log(options);
-    } 
-    // 4. 添加实例方法
-    Vue.prototype.$myMethod = function (methodOptions) {
-      console.log("hi.myplugin");
-    };
-    Vue.myMethod = function () {
-      console.log("hi.myplugin1");
-    };
-    Vue.mixin({
-      created: function () {
-        console.log("ss");
-        // 逻辑...
-      },
-    });
-  };
-  Vue.use(MyPlugin);
-  
-  let vm = new Vue({
-    el: "#app",
-  });
-  ```
-
-## 过滤器Vue.filter
-
-1. 可以用在两个地方：**双花括号插值和 `v-bind` 表达式过滤器应该被添加在 JavaScript 表达式的尾部，由“管道”符号指示**
-
-   ```html
-   <!-- 在双花括号中 -->
-   {{ message | capitalize }}
-   
-   <!-- 在 `v-bind` 中 -->
-   <div v-bind:id="rawId | formatId"></div>
-   ```
-
-   > **注意1**： 过滤器函数总接收表达式的值 (之前的操作链的结果) 作为第一个参数
-
-   > **注意2**：这个表达式最终的值是 表达式的返回值。
-
-   > **注意3**：当全局过滤器和局部过滤器重名时，会采用局部过滤器。
-
-   ```html
-   {{ message | filterA('arg1', arg2) }}
-   ```
-
-   **`filterA` 被定义为接收三个参数的过滤器函数**
-
-2. 注册过滤器：**全局注册**和**局部注册**
-
-   如上component、mixin、directive一样的
-
-   ```js
-   filters: {
-     capitalize: function (value) {
-      	console.log(value)
-     }
-   }
-   // 局部注册
-   ```
-
-   ```js
-   Vue.filter('capitalize', function (value) {
-     console.log(value)
-   })
-   // 创建 Vue 实例之前全局定义过滤器
-   ```
-
-   
-
-   
