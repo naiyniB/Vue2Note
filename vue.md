@@ -2,7 +2,70 @@
 
 ### Modules
 
+### webpack
 
+> 先对webpack进行一个宏观的概念: 这是一个静态资源打包工具。
+>
+> 说白了就是将一些代码上的依赖文件,进行整理,然后将整理好的文件输出出来。
+>
+> webpack先从你给定的entry文件出发，作为一个程序流程上的入口，整理收集到最后，整理好的文件，按照你设计好的名字等，输出到你指定的output
+>
+> -  只能理解 JavaScript 和 JSON 文件，这是 webpack 开箱可用的自带能力。**loader** 让 webpack 能够去处理其他类型的文件，并将它们转换为有效模块
+>
+> -  webpack 不会更改代码中除 `import` 和 `export` 语句以外的部分
+
+**loader** 有两个属性：
+
+`test` 属性，识别出哪些文件会被转换。
+
+`use` 属性，定义出在进行转换时，应该使用哪个 loader。
+
+对一个单独的 module 对象定义了 `rules` 属性，里面包含两个必须属性：`test` 和 `use`，**定义 rules 时**，要定义在 `module.rules` 而不是 `rules` 中
+
+```js
+const path = require('path');
+
+module.exports = {
+  output: {
+    filename: 'my-first-webpack.bundle.js',
+  },
+  module: {
+    rules: [{ test: /\.txt$/, use: 'raw-loader' }],
+  },
+};
+```
+
+在哪里设计入口 出口 或者整理好的文件名字呢。
+
+webpack本身是会自带些 基础的 （4以上版本好像是）
+
+**webpack.config.js才是终极秘籍**
+
+- 安装使用
+
+  ```sh
+  npm install --save-dev webpack // 安装
+  ```
+
+  > 是否使用 `--save-dev` 取决于你的应用场景,开发时候用到，生产场景用不到就用--save-dev，反之忽略
+
+  ```sh
+  npx webpack // 创建一个bundle
+  ```
+
+  OR
+
+  ```sh
+  npx webpack --config webpack.config.js
+  ```
+
+  > 如果 `webpack.config.js` 存在，则 `webpack` 命令将默认选择使用它
+  >
+  > 使用 `--config` 选项只是表明可以传递任何名称的配置文件
+
+- webpack.config.js
+
+- 
 
 ### 解构
 
@@ -118,6 +181,9 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
     }) 
 
   
+
+
+
 
 
 
@@ -1725,17 +1791,6 @@ MyPlugin.install = function (Vue, options) {
 
 也就是说 webpack利用 vue-loader 编译单文件组件编译成为一个浏览器能理解的js文件。
 
-### webpack
 
-> VueCli现在先理解成为一个预设webpack 配置。
-
-> 先对webpack进行一个宏观的概念: 这是一个静态资源打包工具。
->
-> 说白了就是将一些代码上的依赖文件,进行整理,然后将整理好的文件输出出来。
->
-> webpack先从你给定的entry文件出发，作为一个程序流程上的入口，整理收集到最后，整理好的文件，按照你设计好的名字等，输出到你指定的output
-
-在哪里设计入口 出口 或者整理好的文件名字呢。**答案就是：webpack.config.js**
 
 ## vue-router
-
