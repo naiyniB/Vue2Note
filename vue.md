@@ -65,7 +65,9 @@ webpack本身是会自带些 基础的 （4以上版本好像是）
 
 - webpack.config.js
 
-- 
+  看官方文档写配置文件 因为改动实在是少，至少目前是这么认为的。
+
+  **webpack文档**【https://webpack.docschina.org/guides/getting-started】
 
 ### 解构
 
@@ -128,8 +130,6 @@ Vue 2.x 版本中,响应式系统的实现依赖于 Object.defineProperty 方法
     文本（内容）用 {{}} 插值
     
     属性 attribute 用v-bind 指令插值
-
-
 
 指令
     指令 (Directives) 是带有 v- 前缀的特殊 attribute    
