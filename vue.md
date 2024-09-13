@@ -1791,6 +1791,9 @@ MyPlugin.install = function (Vue, options) {
 
 也就是说 webpack利用 vue-loader 编译单文件组件编译成为一个浏览器能理解的js文件。
 
-
-
 ## vue-router
+
+单文件组件和单页面应用是不一样的，单文件组件是将原本的html js css 合在一起，然后通过编译再分开，目的是降低开发者的难度
+单页面应用是根据url的变化去选择组件
+
+vue-router就是利用了这一部分，分别是hash 和 h
